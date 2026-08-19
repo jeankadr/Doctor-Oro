@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>XAUUSD LIVE AI — Aggressive Scalping</title>
+<style>
+:root{--bg:#060a10;--panel:#0d131c;--panel2:#111923;--line:#1d2938;--text:#eef5ff;--muted:#8190a5;--green:#20df8a;--red:#ff5068;--yellow:#ffc857;--blue:#6ba8ff}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 50% -10%,#17263a 0,#060a10 48%);color:var(--text);font-family:Inter,Segoe UI,Arial,sans-serif}
+.app{max-width:1240px;margin:auto;padding:28px 22px 45px}.top{display:flex;justify-content:space-between;align-items:center;padding-bottom:20px;border-bottom:1px solid var(--line)}
+.brand{font-size:20px;font-weight:850;letter-spacing:.7px}.brand span{color:var(--blue)}.sub{font-size:10px;color:var(--muted);letter-spacing:2px;margin-top:5px}
+.conn{font-size:11px;color:var(--muted);display:flex;gap:8px;align-items:center}.dot{width:8px;height:8px;border-radius:50%;background:#59677a}.dot.on{background:var(--green);box-shadow:0 0 14px #20df8a}
+.hero{display:grid;grid-template-columns:1.05fr .95fr;gap:16px;margin-top:22px}.card{background:linear-gradient(145deg,#101824,#0b1119);border:1px solid var(--line);border-radius:18px;box-shadow:0 16px 45px #0006}
+.price{padding:27px}.symbol{font-size:11px;color:var(--muted);letter-spacing:2px}.pricev{font-size:58px;font-weight:850;letter-spacing:-3px;margin:5px 0 4px}.engine{font-size:11px;font-weight:800;letter-spacing:1px}.signal{padding:27px;display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center}.signal small{color:var(--muted);letter-spacing:2px}.signal h1{font-size:42px;margin:7px 0;color:var(--yellow)}.score{text-align:right}.score b{display:block;font-size:30px}.score span{font-size:10px;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-top:14px}.metric{padding:17px}.metric label{display:block;color:var(--muted);font-size:9px;letter-spacing:1.5px;margin-bottom:8px}.metric strong{font-size:18px}.bull{color:var(--green)}.bear{color:var(--red)}
+.analysis{margin-top:14px;padding:20px}.analysis-title{font-size:11px;color:var(--muted);letter-spacing:1.7px;margin-bottom:13px}.why{display:grid;grid-template-columns:1fr 1fr;gap:9px}.reason{background:#080d14;border:1px solid var(--line);border-radius:10px;padding:11px 12px;font-size:12px}.reason.good{border-color:#174d39}.reason.warn{border-color:#5b4920}.reason span{margin-right:7px}.conf{margin-top:14px;display:flex;align-items:center;gap:12px;font-size:11px;color:var(--muted)}.bar{height:6px;flex:1;background:#202b39;border-radius:99px;overflow:hidden}.bar i{display:block;height:100%;background:var(--green);width:0%}
+.levels{margin-top:14px;display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.level{padding:15px;background:#080d14;border:1px solid var(--line);border-radius:11px}.level span{display:block;color:var(--muted);font-size:9px;margin-bottom:5px}.level b{font-size:17px}
+.controls{margin-top:14px;padding:18px;display:flex;align-items:center;justify-content:space-between;gap:15px}.status{font-size:12px;font-weight:750}.last{font-size:11px;color:var(--muted)}
+.history{margin-top:22px}.history-head{display:flex;justify-content:space-between;align-items:end;margin-bottom:10px}.history-head h2{font-size:15px;margin:0}.history-head p{font-size:10px;color:var(--muted);margin:0}.tablewrap{overflow:auto;border:1px solid var(--line);border-radius:15px}.table{width:100%;border-collapse:collapse;min-width:950px;background:#0b1119}.table th{font-size:9px;color:var(--muted);letter-spacing:1px;text-align:left;padding:13px 12px;border-bottom:1px solid var(--line)}.table td{font-size:11px;padding:12px;border-bottom:1px solid #17202c}.table tr:last-child td{border-bottom:0}.buy{color:var(--green);font-weight:850}.sell{color:var(--red);font-weight:850}.wait{color:var(--yellow);font-weight:850}.badge{padding:4px 7px;border-radius:7px;background:#151e29;color:#aebbd0}.win{color:var(--green);font-weight:800}.loss{color:var(--red);font-weight:800}.empty{text-align:center;color:var(--muted);padding:28px!important}
+.footer{text-align:center;color:#4f5d70;font-size:10px;margin-top:18px}
+.chart-card{margin-top:14px;padding:0;overflow:hidden}
+.chart-head{display:flex;justify-content:space-between;align-items:center;padding:16px 18px;border-bottom:1px solid var(--line)}
+.chart-head strong{font-size:12px;letter-spacing:1.2px}.chart-head span{font-size:10px;color:var(--muted)}
+.tradingview-wrap{height:520px;width:100%;background:#0b1119}
+.tradingview-widget-container,.tradingview-widget-container__widget{height:100%;width:100%}
+@media(max-width:900px){.hero{grid-template-columns:1fr}.grid{grid-template-columns:repeat(3,1fr)}.why{grid-template-columns:1fr}.controls{flex-wrap:wrap}}
+@media(max-width:600px){.grid{grid-template-columns:repeat(2,1fr)}.pricev{font-size:45px}.signal{grid-template-columns:1fr}.score{text-align:left}}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="top">
+<div><div class="brand">XAUUSD <span>LIVE AI</span> ENGINE</div><div class="sub">SCALPING · M1 + M5 · CLAUDE AI ENGINE</div></div>
+<div class="conn"><i class="dot" id="dot"></i><span id="conn">BACKEND · CONNECTING...</span></div>
+</header>
+
+<section class="hero">
+<div class="card price"><div class="symbol">XAUUSD · LIVE PRICE</div><div class="pricev" id="price">—</div><div class="engine" id="engine">🟡 ESPERANDO DATOS</div></div>
+<div class="card signal">
+<div><small>ACTIVE SIGNAL</small><h1 id="signal">WAIT</h1><div style="font-size:11px;color:var(--muted)" id="signalMeta">Sin señal activa</div></div>
+<div class="score"><span>AI CONFIDENCE</span><b id="score">—</b><span>/ 100</span></div>
+</div>
+</section>
+
+<section class="grid">
+<div class="card metric"><label>M5 TREND</label><strong id="m5">—</strong></div>
+<div class="card metric"><label>M1 TREND</label><strong id="m1">—</strong></div>
+<div class="card metric"><label>RSI (M1)</label><strong id="rsi">—</strong></div>
+<div class="card metric"><label>ATR (M1)</label><strong id="atr">—</strong></div>
+<div class="card metric"><label>STRUCTURE M1</label><strong id="structure">—</strong></div>
+<div class="card metric"><label>RISK:REWARD</label><strong id="rr">—</strong></div>
+</section>
+
+<section class="card analysis">
+<div class="analysis-title">WHY THIS SIGNAL · razonamiento generado por la IA</div>
+<div class="why" id="why"><div class="reason warn"><span>•</span>Esperando primer análisis del backend...</div></div>
+<div class="levels">
+<div class="level"><span>ENTRY</span><b id="entry">—</b></div>
+<div class="level"><span>STOP LOSS</span><b id="sl">—</b></div>
+<div class="level"><span>TP1 / TP2</span><b id="tp12">—</b></div>
+<div class="level"><span>TP3</span><b id="tp3">—</b></div>
+</div>
+</section>
+
+<section class="card chart-card">
+  <div class="chart-head">
+    <strong>📈 XAUUSD · LIVE CHART</strong>
+    <span>TradingView · 1 MINUTE · REAL-TIME MARKET VIEW</span>
+  </div>
+  <div class="tradingview-wrap">
+    <div class="tradingview-widget-container">
+      <div class="tradingview-widget-container__widget"></div>
+      <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js" async>
+      {
+        "autosize": true,
+        "symbol": "OANDA:XAUUSD",
+        "interval": "1",
+        "timezone": "exchange",
+        "theme": "dark",
+        "style": "1",
+        "locale": "en",
+        "hide_top_toolbar": false,
+        "hide_side_toolbar": true,
+        "allow_symbol_change": false,
+        "withdateranges": true,
+        "hide_volume": false,
+        "save_image": false,
+        "calendar": false,
+        "details": false,
+        "hotlist": false,
+        "studies": [],
+        "support_host": "https://www.tradingview.com"
+      }
+      </script>
+    </div>
+  </div>
+</section>
+
+<section class="card controls">
+<div class="status"><i class="dot" id="dot2"></i><span id="status">Conectando al backend...</span></div>
+<div class="last">Señales cerradas: <b id="statTotal">0</b> · Win rate: <b id="statWinRate">—</b></div>
+<div class="last">Último tick: <span id="last">—</span></div>
+</section>
+
+<section class="history">
+<div class="history-head"><div><h2>SEÑALES DE LA SESIÓN</h2><p>Persistidas en base de datos — no se borran al refrescar.</p></div><div><p id="rate">0 señales</p></div></div>
+<div class="tablewrap">
+<table class="table"><thead><tr><th>HORA</th><th>SIGNAL</th><th>ENTRY</th><th>SL</th><th>TP2</th><th>CONFIANZA</th><th>R:R</th><th>RESULTADO</th></tr></thead>
+<tbody id="history"><tr><td colspan="8" class="empty">Aún no hay señales cerradas en esta sesión.</td></tr></tbody></table>
+</div>
+</section>
+<div class="footer">Backend real · Massive market data · Claude AI Engine · SQLite persistence</div>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+let history=[];
+
+// Ajusta esto al host donde corra tu backend (src/server.js)
+const WS_URL = (location.protocol === "https:" ? "wss://" : "ws://") + location.host + "/ws";
+let socket;
+
+function connect(){
+  socket = new WebSocket(WS_URL);
+  socket.onopen = () => setConn(true, "BACKEND · CONNECTED");
+  socket.onclose = () => { setConn(false, "BACKEND · DISCONNECTED — retrying..."); setTimeout(connect, 3000); };
+  socket.onerror = () => socket.close();
+  socket.onmessage = (evt) => handleMessage(JSON.parse(evt.data));
+}
+
+function setConn(on, label){
+  $("dot").classList.toggle("on", on); $("dot2").classList.toggle("on", on);
+  $("conn").textContent = label; $("status").textContent = label;
+}
+
+function handleMessage(msg){
+  switch(msg.type){
+    case "INIT":
+      history = msg.history || [];
+      renderHistory(); renderStats(msg.stats);
+      break;
+    case "FEED_STATUS":
+      $("engine").textContent = "🟢 FEED: " + msg.status;
+      break;
+    case "PRICE_TICK":
+      $("price").textContent = msg.price.toFixed(2);
+      $("last").textContent = new Date().toLocaleTimeString();
+      break;
+    case "ANALYSIS_STARTED":
+      $("engine").textContent = "🧠 IA ANALIZANDO...";
+      break;
+    case "ANALYSIS_RESULT":
+      renderAnalysis(msg.snapshot, msg.aiVerdict, msg.result);
+      break;
+    case "NEW_SIGNAL":
+      renderActiveSignal(msg.signal);
+      break;
+    case "SIGNAL_CLOSED":
+      history.unshift(msg.signal); renderHistory();
+      break;
+    case "ANALYSIS_ERROR":
+      $("engine").textContent = "🔴 ERROR: " + msg.message;
+      break;
+  }
+}
+
+function renderAnalysis(snapshot, aiVerdict, result){
+  if(!snapshot) return;
+  $("m5").textContent = (snapshot.m5.trendBias||"—").toUpperCase(); $("m5").className = snapshot.m5.trendBias==="bullish"?"bull":"bear";
+  $("m1").textContent = (snapshot.m1.trendBias||"—").toUpperCase(); $("m1").className = snapshot.m1.trendBias==="bullish"?"bull":"bear";
+  $("rsi").textContent = snapshot.m1.rsi14?.toFixed(1) ?? "—";
+  $("atr").textContent = snapshot.m1.atr14?.toFixed(2) ?? "—";
+  $("structure").textContent = snapshot.m1.structure ?? "—";
+  $("engine").textContent = "🟢 ENGINE ON · último análisis " + new Date().toLocaleTimeString();
+
+  if(!aiVerdict) return;
+  $("score").textContent = Math.round(aiVerdict.confidence ?? 0);
+  const why = $("why"); why.innerHTML = "";
+  (aiVerdict.reasoning||[]).forEach(r=>{
+    const d=document.createElement("div"); d.className="reason good"; d.innerHTML=`<span>✓</span>${r}`; why.appendChild(d);
+  });
+  if(aiVerdict.invalidatedBy){
+    const d=document.createElement("div"); d.className="reason warn"; d.innerHTML=`<span>⚠</span>Invalida si: ${aiVerdict.invalidatedBy}`; why.appendChild(d);
+  }
+
+  if(!result?.ok){
+    $("signal").textContent="WAIT"; $("signal").style.color="var(--yellow)";
+    $("signalMeta").textContent = "Sin señal — motivo: " + (result?.reason || "WAIT");
+  }
+}
+
+function renderActiveSignal(s){
+  $("signal").textContent = s.direction;
+  $("signal").style.color = s.direction==="BUY" ? "var(--green)" : "var(--red)";
+  $("signalMeta").textContent = "Emitida " + new Date(s.createdAt).toLocaleTimeString();
+  $("entry").textContent = s.entry.toFixed(2);
+  $("sl").textContent = s.sl.toFixed(2);
+  $("tp12").textContent = s.tp1.toFixed(2) + " / " + s.tp2.toFixed(2);
+  $("tp3").textContent = s.tp3.toFixed(2);
+  $("rr").textContent = s.riskReward.toFixed(2);
+}
+
+function renderHistory(){
+  const tb = $("history");
+  if(!history.length){ tb.innerHTML = '<tr><td colspan="8" class="empty">Aún no hay señales cerradas en esta sesión.</td></tr>'; return; }
+  tb.innerHTML = history.map(s => `
+    <tr>
+      <td>${new Date(s.closed_at || s.closedAt).toLocaleTimeString()}</td>
+      <td class="${s.direction.toLowerCase()}">${s.direction}</td>
+      <td>${Number(s.entry).toFixed(2)}</td>
+      <td>${Number(s.sl).toFixed(2)}</td>
+      <td>${Number(s.tp2).toFixed(2)}</td>
+      <td><span class="badge">${Math.round(s.confidence)}/100</span></td>
+      <td>${Number(s.risk_reward ?? s.riskReward).toFixed(2)}</td>
+      <td class="${(s.result||'').toLowerCase()}">${s.result || '—'}</td>
+    </tr>`).join("");
+  $("rate").textContent = history.length + " señales cerradas";
+}
+
+function renderStats(stats){
+  if(!stats) return;
+  $("statTotal").textContent = stats.total || 0;
+  $("statWinRate").textContent = stats.winRate != null ? stats.winRate.toFixed(1) + "%" : "—";
+}
+
+connect();
+</script>
+</body>
+</html>
