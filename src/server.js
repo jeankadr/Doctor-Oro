@@ -122,12 +122,14 @@ const INGEST_PATH = process.env.INGEST_WS_PATH || "/ingest";
 
 httpServer.on("upgrade", (req, socket, head) => {
   const pathname = new URL(req.url, "http://x").pathname;
+  console.log(`[Upgrade] Solicitud entrante para: "${pathname}" (req.url completo: "${req.url}")`);
 
   if (pathname === DASHBOARD_PATH) {
     wss.handleUpgrade(req, socket, head, (ws) => wss.emit("connection", ws, req));
   } else if (pathname === INGEST_PATH) {
     ingestWss.handleUpgrade(req, socket, head, (ws) => ingestWss.emit("connection", ws, req));
   } else {
+    console.log(`[Upgrade] Ruta "${pathname}" no coincide con "${DASHBOARD_PATH}" ni "${INGEST_PATH}" — cerrando socket.`);
     socket.destroy();
   }
 });
