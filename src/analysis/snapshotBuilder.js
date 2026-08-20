@@ -1,5 +1,12 @@
 import { rsi, atr, swingStructure, trendBias } from "./indicators.js";
 
+// Cuántas velas cerradas mínimas se necesitan antes de generar el primer
+// snapshot. 25 es el valor recomendado para producción (RSI/estructura con
+// suficiente historia real). Bájalo temporalmente (ej: 3) solo para probar
+// rápido que el pipeline completo funciona de punta a punta — con pocas
+// velas el análisis es menos confiable, no lo dejes bajo para operar real.
+const MIN_CANDLES = Number(process.env.MIN_CANDLES_FOR_SNAPSHOT || 25);
+
 /**
  * Empaqueta el estado real del mercado (M1 + M5) en un snapshot estructurado.
  * Esto es lo único que la IA recibe como "verdad" del mercado — nunca ve
@@ -7,7 +14,7 @@ import { rsi, atr, swingStructure, trendBias } from "./indicators.js";
  * determinista.
  */
 export function buildSnapshot({ m1Candles, m5Candles, currentPrice }) {
-  if (m1Candles.length < 25 || m5Candles.length < 25) return null;
+  if (m1Candles.length < MIN_CANDLES || m5Candles.length < MIN_CANDLES) return null;
 
   const m1Closes = m1Candles.map((c) => c.close);
   const m5Closes = m5Candles.map((c) => c.close);
