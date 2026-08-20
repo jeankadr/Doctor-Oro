@@ -9,7 +9,6 @@ const __dirname = fileURLToPath(new URL(".", import.meta.url));
 const PUBLIC_DIR = join(__dirname, "..", "public");
 const MIME = { ".html": "text/html", ".js": "text/javascript", ".css": "text/css" };
 
-import { MassiveMarketDataClient } from "./marketData/massiveClient.js";
 import { CandleAggregator } from "./marketData/candleAggregator.js";
 import { buildSnapshot } from "./analysis/snapshotBuilder.js";
 import { AiEngine } from "./ai/aiEngine.js";
@@ -18,9 +17,7 @@ import { SignalStore } from "./signals/signalStore.js";
 import { OutcomeTracker } from "./signals/outcomeTracker.js";
 
 const cfg = {
-  massiveApiKey: process.env.MASSIVE_API_KEY,
-  massiveWsUrl: process.env.MASSIVE_WS_URL,
-  massiveSymbol: process.env.MASSIVE_SYMBOL,
+  ingestAuthToken: process.env.INGEST_AUTH_TOKEN, // token compartido con el puente MT5
   anthropicApiKey: process.env.ANTHROPIC_API_KEY,
   anthropicModel: process.env.ANTHROPIC_MODEL || "claude-sonnet-5",
   port: Number(process.env.PORT || 8080),
@@ -89,22 +86,13 @@ async function maybeRunAnalysis() {
   }
 }
 
-// ---- Market data ----
-const marketClient = new MassiveMarketDataClient({
-  apiKey: cfg.massiveApiKey,
-  wsUrl: cfg.massiveWsUrl,
-  symbol: cfg.massiveSymbol,
-});
-
-marketClient.on("tick", (tick) => {
+// ---- Ingesta de datos: recibe ticks empujados por el puente MT5 (Python) ----
+function handleIncomingTick(tick) {
   lastPrice = tick.price;
   aggregator.onTick(tick);
   outcomeTracker.onPriceTick(tick.price);
   broadcast({ type: "PRICE_TICK", price: tick.price, bid: tick.bid, ask: tick.ask });
-});
-
-marketClient.on("status", (s) => broadcast({ type: "FEED_STATUS", status: s }));
-marketClient.on("error", (e) => console.error("[MarketData] error:", e.message));
+}
 
 // ---- HTTP: sirve el dashboard estático (mismo origen que el WS -> sin CORS ni mixed content) ----
 const httpServer = createServer(async (req, res) => {
@@ -121,8 +109,14 @@ const httpServer = createServer(async (req, res) => {
   }
 });
 
-// ---- WebSocket hacia el dashboard ----
+// ---- WebSocket hacia el dashboard (clientes de solo lectura: tu navegador) ----
 const wss = new WebSocketServer({ server: httpServer, path: process.env.DASHBOARD_WS_PATH || "/ws" });
+
+// ---- WebSocket de ingesta (el puente MT5 en Python se conecta aquí) ----
+const ingestWss = new WebSocketServer({
+  server: httpServer,
+  path: process.env.INGEST_WS_PATH || "/ingest",
+});
 
 function broadcast(payload) {
   const msg = JSON.stringify(payload);
@@ -142,7 +136,32 @@ wss.on("connection", (socket) => {
   );
 });
 
+ingestWss.on("connection", (socket, req) => {
+  const token = new URL(req.url, "http://x").searchParams.get("token");
+  if (!cfg.ingestAuthToken || token !== cfg.ingestAuthToken) {
+    socket.close(4001, "unauthorized");
+    return;
+  }
+  broadcast({ type: "FEED_STATUS", status: "MT5 bridge connected" });
+
+  socket.on("message", (raw) => {
+    let tick;
+    try {
+      tick = JSON.parse(raw.toString());
+    } catch {
+      return;
+    }
+    if (typeof tick.price !== "number") return;
+    handleIncomingTick(tick);
+  });
+
+  socket.on("close", () => {
+    broadcast({ type: "FEED_STATUS", status: "MT5 bridge disconnected" });
+  });
+});
+
 httpServer.listen(cfg.port, () => {
-  console.log(`Dashboard WS escuchando en :${cfg.port}${process.env.DASHBOARD_WS_PATH || "/ws"}`);
-  marketClient.connect();
+  const wsPath = process.env.DASHBOARD_WS_PATH || "/ws";
+  const ingestPath = process.env.INGEST_WS_PATH || "/ingest";
+  console.log(`Dashboard WS en :${cfg.port}${wsPath} — Ingesta MT5 en :${cfg.port}${ingestPath}`);
 });
