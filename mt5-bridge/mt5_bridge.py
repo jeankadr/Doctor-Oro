@@ -53,7 +53,8 @@ def connect_mt5():
 
 async def stream_ticks():
     last_time = None
-    url = f"{BACKEND_WS_URL}?token={INGEST_TOKEN}"
+    from urllib.parse import quote
+    url = f"{BACKEND_WS_URL}?token={quote(INGEST_TOKEN, safe='')}"
 
     while True:
         try:
