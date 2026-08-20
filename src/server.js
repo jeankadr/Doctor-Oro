@@ -110,12 +110,26 @@ const httpServer = createServer(async (req, res) => {
 });
 
 // ---- WebSocket hacia el dashboard (clientes de solo lectura: tu navegador) ----
-const wss = new WebSocketServer({ server: httpServer, path: process.env.DASHBOARD_WS_PATH || "/ws" });
+// IMPORTANTE: se usa noServer + enrutamiento manual del evento "upgrade".
+// Crear varios WebSocketServer con {server, path} directamente tiene un bug
+// conocido: el primero registrado intercepta y rechaza (HTTP 400) las
+// conexiones destinadas al segundo path. Enrutando a mano lo evitamos.
+const wss = new WebSocketServer({ noServer: true });
+const ingestWss = new WebSocketServer({ noServer: true });
 
-// ---- WebSocket de ingesta (el puente MT5 en Python se conecta aquí) ----
-const ingestWss = new WebSocketServer({
-  server: httpServer,
-  path: process.env.INGEST_WS_PATH || "/ingest",
+const DASHBOARD_PATH = process.env.DASHBOARD_WS_PATH || "/ws";
+const INGEST_PATH = process.env.INGEST_WS_PATH || "/ingest";
+
+httpServer.on("upgrade", (req, socket, head) => {
+  const pathname = new URL(req.url, "http://x").pathname;
+
+  if (pathname === DASHBOARD_PATH) {
+    wss.handleUpgrade(req, socket, head, (ws) => wss.emit("connection", ws, req));
+  } else if (pathname === INGEST_PATH) {
+    ingestWss.handleUpgrade(req, socket, head, (ws) => ingestWss.emit("connection", ws, req));
+  } else {
+    socket.destroy();
+  }
 });
 
 function broadcast(payload) {
