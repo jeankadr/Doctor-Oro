@@ -55,6 +55,7 @@ async def stream_ticks():
     last_time = None
     from urllib.parse import quote
     url = f"{BACKEND_WS_URL}?token={quote(INGEST_TOKEN, safe='')}"
+    print(f"[Bridge] Intentando conectar a: {url}")
 
     while True:
         try:
@@ -87,6 +88,8 @@ async def stream_ticks():
 
 
 if __name__ == "__main__":
+    print(f"[Config] BACKEND_WS_URL = {BACKEND_WS_URL}")
+    print(f"[Config] MT5_SYMBOL = {SYMBOL}")
     connect_mt5()
     try:
         asyncio.run(stream_ticks())
